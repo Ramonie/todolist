@@ -1,4 +1,4 @@
-package martins.ramonie.todolist.controller;
+package martins.ramonie.todolist.controllers;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/primeira")
-// http://localhost:8080/primeiraRota ---
+// http://localhost:8080/primeiraRota/ ---
 public class Controller {
 
     /**
@@ -19,8 +19,12 @@ public class Controller {
      * DELET - REMOVER UMA INFORMAÇÃO/DADO
      * PATCH - ALTERA SOMENTE UMA PARTE DA INFORMAÇÃO/DADO
      */
-
     @GetMapping("/")
+    public String tell(){
+        return "Inicial";
+    }
+
+    @GetMapping("/primeira")
     //MÉTODO (FUNCIONALIDADE) DE UMA CLASSE
     public String mensagem(){
         return "Funcionou";
