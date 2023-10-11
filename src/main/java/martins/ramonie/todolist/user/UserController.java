@@ -2,6 +2,8 @@ package martins.ramonie.todolist.user;
 
 
 import martins.ramonie.todolist.model.UserModel;
+import martins.ramonie.todolist.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+    @Autowired
+    private UserRepository userRepository;
+
     private UserModel userModel;
 
     /**
@@ -24,11 +29,9 @@ public class UserController {
      * PATCH - ALTERA SOMENTE UMA PARTE DA INFORMAÇÃO/DADO
      */
 @PostMapping("/")
-    public void create(@RequestBody UserModel userModel){
-    System.out.println(userModel.getUsername());
-    System.out.println(userModel.getName());
-    System.out.println(userModel.getPassword());
-
+    public UserModel create(@RequestBody UserModel userModel){
+    var userCreated = this.userRepository.save(userModel);
+    return userCreated;
     }
 
 
