@@ -3,11 +3,14 @@ package martins.ramonie.todolist.task;
 import jakarta.servlet.http.HttpServletRequest;
 import martins.ramonie.todolist.repository.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -16,12 +19,20 @@ public class TaskController {
     @Autowired
     private TaskRepository taskRepository;
     @PostMapping("/")
-    public TaskModel create(@RequestBody TaskModel taskModel, HttpServletRequest request){
-        System.out.println("Chegou no controller " + request.getAttribute("idUser"));
+    public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request){
         var idUser = request.getAttribute("idUser");
         taskModel.setIduser((UUID) idUser);
+        var currentDate = LocalDateTime.now();
+        if( currentDate.isAfter(taskModel.getStartAt())|| currentDate.isAfter(taskModel.getEndAt()) ){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de inicio / data de término deve ser maior que a atual");
+
+        }
+        if( taskModel.getStartAt().isAfter(taskModel.getEndAt())){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de inicio / data de ininio deve ser menor que a de termino");
+
+        }
         var task = this.taskRepository.save(taskModel);
-        return task;
+        return ResponseEntity.status(HttpStatus.OK).body(task);
 
     }
 }
