@@ -2,6 +2,7 @@ package martins.ramonie.todolist.task;
 
 import jakarta.servlet.http.HttpServletRequest;
 import martins.ramonie.todolist.repository.TaskRepository;
+import martins.ramonie.todolist.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,10 +48,11 @@ public class TaskController {
     @PutMapping("/{id}")
     public TaskModel update(@RequestBody TaskModel taskModel, HttpServletRequest request, @PathVariable UUID id){
         var idUser = request.getAttribute("idUser");
-        System.out.println(idUser);
-        taskModel.setIduser((UUID) idUser);
-        taskModel.setId(id);
-        return this.taskRepository.save(taskModel);
+
+        var task = this.taskRepository.findById(id).orElse(null);
+        Utils.copyNonNullProperties(taskModel, task);
+
+        return this.taskRepository.save(task);
     }
 
 }
