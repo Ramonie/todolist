@@ -21,7 +21,9 @@ public class TaskController {
     public ResponseEntity create(@RequestBody TaskModel taskModel, HttpServletRequest request){
         var idUser = request.getAttribute("idUser");
         taskModel.setIduser((UUID) idUser);
+
         var currentDate = LocalDateTime.now();
+
         if( currentDate.isAfter(taskModel.getStartAt())|| currentDate.isAfter(taskModel.getEndAt()) ){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("A data de inicio / data de término deve ser maior que a atual");
 
@@ -62,7 +64,7 @@ public class TaskController {
 
         Utils.copyNonNullProperties(taskModel, task);
         var  taskUpdated = this.taskRepository.save(task);
-        return ResponseEntity.ok().body(this.taskRepository.save(taskUpdated));
+        return ResponseEntity.ok().body(taskUpdated);
 
     }
 
